@@ -15,7 +15,6 @@ import {
   hideEndMessage,
 } from './js/render-functions';
 
-// --- Елементи DOM ---
 const form = document.querySelector('.form');
 const input = document.querySelector('input[name="search-text"]');
 const gallery = document.querySelector('.gallery');
@@ -23,26 +22,22 @@ const loadMoreBtn = document.querySelector('.load-more');
 const loader = document.querySelector('.loader');
 const endMessage = document.querySelector('.end-message');
 
-// --- Змінні стану ---
-const perPage = 15; // Кількість зображень на сторінку (з pixabay-api.js)
+const perPage = 15;
 let query = '';
 let page = 1;
 let totalHits = 0;
 
-// --- Ініціалізація Lightbox ---
 const lightbox = initLightbox();
 
-// --- Функція прокрутки сторінки (для зручності) ---
 function scrollGallery() {
   const galleryItemHeight =
     gallery.firstElementChild.getBoundingClientRect().height;
   window.scrollBy({
-    top: galleryItemHeight * 2, // Прокрутка на дві висоти елемента
+    top: galleryItemHeight * 2,
     behavior: 'smooth',
   });
 }
 
-// --- Головна функція пошуку ---
 async function fetchImages() {
   showLoader();
   hideEndMessage();
@@ -65,7 +60,6 @@ async function fetchImages() {
 
     createGallery(images);
 
-    // Логіка керування кнопкою "Load More"
     const loadedImagesCount = page * perPage;
 
     if (loadedImagesCount >= totalHits) {
@@ -74,7 +68,6 @@ async function fetchImages() {
       showLoadMoreButton();
     }
 
-    // Прокрутка для завантаження Load More
     if (page > 1) {
       scrollGallery();
     }
@@ -88,14 +81,12 @@ async function fetchImages() {
   }
 }
 
-// --- Обробник відправки форми ---
 async function onSearch(event) {
   event.preventDefault();
 
   const newQuery = input.value.trim();
 
   if (newQuery === '') {
-    // Не дозволяти пустий пошук
     iziToast.warning({
       message: 'Please enter a search term.',
       position: 'topRight',
@@ -104,25 +95,22 @@ async function onSearch(event) {
   }
 
   if (newQuery === query) {
-    // Якщо запит той самий, не робимо повторний пошук
     return;
   }
 
   query = newQuery;
-  page = 1; // Скидаємо сторінку на першу
-  clearGallery(); // Очищаємо галерею перед новим пошуком
+  page = 1;
+  clearGallery();
   hideEndMessage();
 
   await fetchImages();
 }
 
-// --- Обробник кнопки "Load More" ---
 async function onLoadMore() {
   page += 1;
   hideLoadMoreButton();
   await fetchImages();
 }
 
-// --- Прив'язка обробників подій ---
 if (form) form.addEventListener('submit', onSearch);
 if (loadMoreBtn) loadMoreBtn.addEventListener('click', onLoadMore);
