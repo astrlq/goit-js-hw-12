@@ -134,7 +134,6 @@ img {
   font-size: 15px;
 }
 
-/* Кнопка "Load more" */
 .controls {
   display: flex;
   justify-content: center;
@@ -157,20 +156,18 @@ img {
   background-color: rgba(108, 140, 255, 1);
 }
 
-/* Стили для лоадера (простой спиннер) */
 .loader {
   width: 48px;
   height: 48px;
   border: 5px solid #fff;
   border-bottom-color: #ff3d00;
   border-radius: 50%;
-  display: none; /* Скрыт по умолчанию */
+  display: none;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
   margin: 20px auto;
 }
 
-/* Показываем лоадер, когда он нужен (из render-functions.js) */
 .loader.visible {
   display: block;
 }
@@ -184,12 +181,10 @@ img {
   }
 }
 
-/* Базовый класс для скрытия элементов */
 .is-hidden {
   display: none;
 }
 
-/* Стили для сообщения о конце результатов */
 .end-message {
   text-align: center;
   margin-top: 24px;

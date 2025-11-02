@@ -10,15 +10,13 @@ import {
   hideLoader,
 } from './js/render-functions';
 
-// селекторы
 const form = document.querySelector('.form');
 const input = document.querySelector('input[name="search-text"]');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const loader = document.querySelector('.loader');
-const endMessage = document.querySelector('.end-message'); // <-- Добавили
+const endMessage = document.querySelector('.end-message');
 
-// если каких-то элементов нет
 if (!form || !input || !gallery || !loader || !loadMoreBtn || !endMessage) {
   console.error(
     'Missing required DOM elements. Check that .form, input[name="search-text"], .gallery, .loader, .load-more and .end-message exist in index.html'
@@ -30,7 +28,6 @@ let page = 1;
 let totalHits = 0;
 const perPage = 15;
 
-// Подвешиваем обработчики
 if (form) form.addEventListener('submit', onSearch);
 if (loadMoreBtn) loadMoreBtn.addEventListener('click', onLoadMore);
 
@@ -48,12 +45,11 @@ async function onSearch(event) {
     return;
   }
 
-  // сбрасываем состояние
   page = 1;
   totalHits = 0;
   clearGallery();
   hideLoadMoreButton();
-  hideEndMessage(); // <-- Добавили
+  hideEndMessage();
   showLoader();
 
   try {
@@ -79,7 +75,7 @@ async function onSearch(event) {
       showLoadMoreButton();
     } else {
       hideLoadMoreButton();
-      showEndMessage(); // <-- Заменили iziToast
+      showEndMessage();
     }
   } catch (error) {
     console.error('Search error:', error);
@@ -107,7 +103,7 @@ async function onLoadMore() {
     }
 
     if (data.hits.length === 0) {
-      showEndMessage(); // <-- Заменили iziToast
+      showEndMessage();
       hideLoadMoreButton();
       return;
     }
@@ -118,7 +114,7 @@ async function onLoadMore() {
     const totalLoaded = page * perPage;
     if (totalLoaded >= totalHits) {
       hideLoadMoreButton();
-      showEndMessage(); // <-- Заменили iziToast
+      showEndMessage();
     } else {
       showLoadMoreButton();
     }
@@ -141,7 +137,6 @@ function hideLoadMoreButton() {
   if (loadMoreBtn) loadMoreBtn.classList.add('is-hidden');
 }
 
-// ----- 👇 Новые функции 👇 -----
 function showEndMessage() {
   if (endMessage) endMessage.classList.remove('is-hidden');
 }
@@ -149,7 +144,6 @@ function showEndMessage() {
 function hideEndMessage() {
   if (endMessage) endMessage.classList.add('is-hidden');
 }
-// ----- 👆 Новые функции 👆 -----
 
 function smoothScroll() {
   if (!gallery) return;

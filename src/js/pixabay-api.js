@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
   timeout: 10000,
 });
 
-// исправленная версия — принимает и использует параметр page
 export async function getImagesByQuery(query, page = 1) {
   const response = await axiosInstance.get('', {
     params: {
@@ -16,8 +15,8 @@ export async function getImagesByQuery(query, page = 1) {
       image_type: 'photo',
       orientation: 'horizontal',
       safesearch: true,
-      page, // ← добавили параметр страницы
-      per_page: 15, // ← ставим 15 по условию задания
+      page,
+      per_page: 15,
     },
   });
   return response.data;
