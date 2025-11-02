@@ -1,6 +1,18 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+let lightbox = null;
+
+export function initLightbox() {
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {
+      captionsData: 'alt',
+      captionDelay: 250,
+    });
+  }
+  return lightbox;
+}
+
 export function createGallery(images) {
   const gallery = document.querySelector('.gallery');
 
@@ -23,11 +35,9 @@ export function createGallery(images) {
 
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-  lightbox.refresh();
+  if (lightbox) {
+    lightbox.refresh();
+  }
 }
 
 export function clearGallery() {
@@ -43,4 +53,23 @@ export function showLoader() {
 export function hideLoader() {
   const loader = document.querySelector('.loader');
   if (loader) loader.classList.remove('visible');
+}
+
+const loadMoreBtn = document.querySelector('.load-more');
+const endMessage = document.querySelector('.end-message');
+
+export function showLoadMoreButton() {
+  if (loadMoreBtn) loadMoreBtn.classList.remove('is-hidden');
+}
+
+export function hideLoadMoreButton() {
+  if (loadMoreBtn) loadMoreBtn.classList.add('is-hidden');
+}
+
+export function showEndMessage() {
+  if (endMessage) endMessage.classList.remove('is-hidden');
+}
+
+export function hideEndMessage() {
+  if (endMessage) endMessage.classList.add('is-hidden');
 }

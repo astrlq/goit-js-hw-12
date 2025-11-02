@@ -1,4 +1,5 @@
 import axios from 'axios';
+// !! ПЕРЕВІРТЕ КЛЮЧ! Можливо, він був відкликаний.
 const API_KEY = '53054234-db08f1651f6ed2d5abc76426b';
 const BASE_URL = 'https://pixabay.com/api/';
 
