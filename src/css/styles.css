@@ -134,29 +134,66 @@ img {
   font-size: 15px;
 }
 
+/* Кнопка "Load more" */
+.controls {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 44px 0;
+}
+
+.load-more {
+  width: 125px;
+  height: 40px;
+  font-size: 16px;
+  background-color: rgba(78, 117, 255, 1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 16px 8px 16px;
+}
+
+.load-more:hover {
+  background-color: rgba(108, 140, 255, 1);
+}
+
+/* Стили для лоадера (простой спиннер) */
 .loader {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 70px;
-  height: 70px;
-  border: 8px solid #4e75ff;
-  border-bottom-color: transparent;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: #ff3d00;
   border-radius: 50%;
+  display: none; /* Скрыт по умолчанию */
+  box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  transform: translate(-50%, -50%);
-  display: none;
+  margin: 20px auto;
+}
+
+/* Показываем лоадер, когда он нужен (из render-functions.js) */
+.loader.visible {
+  display: block;
 }
 
 @keyframes rotation {
   0% {
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    transform: translate(-50%, -50%) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
-.loader.visible {
-  display: block;
+/* Базовый класс для скрытия элементов */
+.is-hidden {
+  display: none;
+}
+
+/* Стили для сообщения о конце результатов */
+.end-message {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 16px;
+  color: rgba(46, 47, 66, 1);
+  font-family: sans-serif;
 }

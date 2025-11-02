@@ -10,17 +10,18 @@ import {
   hideLoader,
 } from './js/render-functions';
 
-// селекторы — убедись, что такие элементы есть в index.html
+// селекторы
 const form = document.querySelector('.form');
 const input = document.querySelector('input[name="search-text"]');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const loader = document.querySelector('.loader');
+const endMessage = document.querySelector('.end-message'); // <-- Добавили
 
-// если каких-то элементов нет — сообщим в консоль и прекратим (чтобы не ломать логику)
-if (!form || !input || !gallery || !loader) {
+// если каких-то элементов нет
+if (!form || !input || !gallery || !loader || !loadMoreBtn || !endMessage) {
   console.error(
-    'Missing required DOM elements. Check that .form, input[name="search-text"], .gallery and .loader exist in index.html'
+    'Missing required DOM elements. Check that .form, input[name="search-text"], .gallery, .loader, .load-more and .end-message exist in index.html'
   );
 }
 
@@ -29,15 +30,13 @@ let page = 1;
 let totalHits = 0;
 const perPage = 15;
 
-// Подвешиваем обработчики только если форма есть
+// Подвешиваем обработчики
 if (form) form.addEventListener('submit', onSearch);
-// loadMoreBtn может быть null (если в html не добавили) — поэтому проверяем
 if (loadMoreBtn) loadMoreBtn.addEventListener('click', onLoadMore);
 
 async function onSearch(event) {
   event.preventDefault();
 
-  // защитимся от ситуации, когда селектор не найден
   if (!input) return;
 
   query = input.value.trim();
@@ -54,12 +53,12 @@ async function onSearch(event) {
   totalHits = 0;
   clearGallery();
   hideLoadMoreButton();
+  hideEndMessage(); // <-- Добавили
   showLoader();
 
   try {
     const data = await getImagesByQuery(query, page);
 
-    // если структура ответа неожидана
     if (!data || !Array.isArray(data.hits)) {
       throw new Error('Unexpected API response');
     }
@@ -74,18 +73,13 @@ async function onSearch(event) {
     }
 
     createGallery(data.hits);
-
     totalHits = data.totalHits || 0;
 
-    // показываем кнопку только если есть ещё результаты
     if (totalHits > perPage) {
       showLoadMoreButton();
     } else {
       hideLoadMoreButton();
-      iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
-      });
+      showEndMessage(); // <-- Заменили iziToast
     }
   } catch (error) {
     console.error('Search error:', error);
@@ -99,7 +93,6 @@ async function onSearch(event) {
 }
 
 async function onLoadMore() {
-  // защитимся если нет query
   if (!query) return;
 
   page += 1;
@@ -114,11 +107,7 @@ async function onLoadMore() {
     }
 
     if (data.hits.length === 0) {
-      // ничего не пришло — конец коллекции
-      iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
-      });
+      showEndMessage(); // <-- Заменили iziToast
       hideLoadMoreButton();
       return;
     }
@@ -129,10 +118,7 @@ async function onLoadMore() {
     const totalLoaded = page * perPage;
     if (totalLoaded >= totalHits) {
       hideLoadMoreButton();
-      iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
-      });
+      showEndMessage(); // <-- Заменили iziToast
     } else {
       showLoadMoreButton();
     }
@@ -155,9 +141,18 @@ function hideLoadMoreButton() {
   if (loadMoreBtn) loadMoreBtn.classList.add('is-hidden');
 }
 
+// ----- 👇 Новые функции 👇 -----
+function showEndMessage() {
+  if (endMessage) endMessage.classList.remove('is-hidden');
+}
+
+function hideEndMessage() {
+  if (endMessage) endMessage.classList.add('is-hidden');
+}
+// ----- 👆 Новые функции 👆 -----
+
 function smoothScroll() {
   if (!gallery) return;
-  // возьмём последнюю добавленную карточку (чтобы прокрутка корректно работала при разных разметках)
   const firstCard =
     gallery.querySelector('.photo-card') || gallery.firstElementChild;
   if (!firstCard) return;
